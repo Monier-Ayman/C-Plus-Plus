@@ -1,53 +1,64 @@
-#include <bits/stdc++.h>
-#include <cassert>
-using namespace std;
+/**
+ * @file linear_sieve.cpp
+ * @brief Linear sieve algorithm to generate primes and smallest prime factors.
+ *
+ * This implementation finds all prime numbers up to N in O(N) time
+ * and computes the smallest prime factor (SPF) for each number.
+ */
 
-// Linear sieve: finds primes up to N
-void linear_sieve(int N, vector<int> &primes, vector<int> &spf){
-    spf.assign(N+1, 0); // smallest prime factor
+#include <cassert>
+#include <vector>
+
+namespace math{
+
+/**
+ * @brief Computes all prime numbers up to N and the smallest prime factor for
+ * each number.
+ *
+ * @param N Upper bound for prime generation.
+ * @param primes Vector to store all prime numbers up to N.
+ * @param spf Vector where spf[x] is the smallest prime factor of x.
+ */
+
+void linear_sieve(int N, std::vector<int>& primes, std::vector<int>& spf){
+    spf.assign(N+1, 0);
 
     for(int i=2 ; i<=N ; i++){
-        if(spf[i] == 0){
+        if(spf[i]==0){
             spf[i]= i;
             primes.push_back(i);
         }
-        for(int p : primes){
-            if (i * p > N) break;
-            spf[i * p]= p;
-            if (p == spf[i]) break;
+        for(int p:primes){
+            if(i*p > N){
+                break;
+            }
+            spf[i*p]= p;
+            if(p== spf[i]){
+                break;
+            }
         }
     }
 }
 
-// Test the linear sieve
-void tests() {
-    int N = 20;
-    vector<int> primes, spf;
+/**
+ * @brief Self-test function for the linear sieve.
+ */
+void test_linear_sieve(){
+    int N= 20;
+    std::vector<int> primes, spf;
     linear_sieve(N, primes, spf);
 
-    // Expected primes up to 20
-    vector<int> expected_primes{2, 3, 5, 7, 11, 13, 17, 19};
+    std::vector<int> expected_primes{2, 3, 5, 7, 11, 13, 17, 19};
     assert(primes == expected_primes);
 
-    // Expected smallest prime factors up to 20
-    vector<int> expected_spf{
-        0, 0, 2, 3, 2, 5, 2, 7, 2, 3, 2, 11, 2, 13, 2, 3, 2, 17, 2, 19, 2
-    };
-    assert(spf == expected_spf);
-
-    cout << "All tests passed!" << endl;
+    std::vector<int> expected_spf{0,  0, 2,  3, 2, 5, 2,  7, 2,  3, 2,
+                                  11, 2, 13, 2, 3, 2, 17, 2, 19, 2};
+    assert(spf==expected_spf);
 }
 
+}  // namespace math
+
 int main() {
-    tests(); // run automated tests
-
-    int N = 50;
-    vector<int> primes, spf;
-    linear_sieve(N, primes, spf);
-
-    cout << "Primes up to " << N << ": ";
-    for(int p : primes) cout << p << " ";
-    cout << endl;
-
+    math::test_linear_sieve();
     return 0;
 }
